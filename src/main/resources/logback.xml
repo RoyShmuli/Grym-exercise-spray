@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Properties -->
+    <property name="app.name" value="spray" />
+    <property name="log.pattern" value="%date [%level] from %logger in %thread %message%n%xException" />
+    <property name="log.folder" value="E:/logs/grymco/spray" />
+    <property name="file.maxSize" value="5MB" />
+    <property name="file.maxFiles" value="10" />
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"  additivity="false">
+        <file>${log.folder}/${app.name}.1.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${log.folder}/${app.name}.%i.log</fileNamePattern>
+            <minIndex>2</minIndex>
+            <maxIndex>${file.maxFiles}</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${file.maxSize}</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <prudent>false</prudent>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="akka" level="INFO" />
+    <logger name="spray" level="INFO" />
+
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
