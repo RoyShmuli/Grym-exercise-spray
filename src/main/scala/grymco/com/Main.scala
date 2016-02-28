@@ -1,7 +1,6 @@
 package grymco.com
 
 import akka.actor._
-import akka.event.Logging
 import akka.io.IO
 import akka.pattern.ask
 import akka.util.Timeout
@@ -10,11 +9,15 @@ import spray.can.Http
 
 import scala.concurrent.duration._
 
+/**
+  * Created by Roy on 28/02/2016.
+  */
 object Main extends App {
+  // Force init configuration on start or exit on error
   SprayConfig.init()
 
   implicit val system = ActorSystem("Spray")
-  val log = Logging.getLogger(system, this)
+  val log = system.log
 
   val api = system.actorOf(Props(new RestInterface()), "httpInterface")
 
@@ -30,6 +33,6 @@ object Main extends App {
       case Http.CommandFailed(cmd) =>
         log.error("FATAL: REST interface could not bind to " +
           s"${sprayConfig.host}:${sprayConfig.port}, ${cmd.failureMessage}")
-        system.terminate()
+        system.shutdown()
     }
 }
