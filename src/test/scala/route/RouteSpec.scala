@@ -18,6 +18,12 @@ class RouteSpec extends Specification with Specs2RouteTest with RestApi {
       }
     }
 
+    "return an error response for GET requests because missing the parameter name: /simple?any=roy" in {
+      Get("/simple?any=roy") ~> routes ~> check {
+        handled ===  false
+      }
+    }
+
     "return an error response for GET requests that doesn't exits: /does/not/exists/" in {
       Get("/does/not/exists/") ~> routes ~> check {
         handled ===  false
